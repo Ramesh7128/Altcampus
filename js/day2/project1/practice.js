@@ -90,7 +90,8 @@ function sumMultiples3And5() {
     }
     return sum
 }
-console.log(sumMultiples3And5());
+
+console.log("sum multiples of 3 and 5: " + sumMultiples3And5());
 
 // If user enters positive number, that number won't be displayed
 // done above.
@@ -215,7 +216,8 @@ switch(test) {
 // - FF if marks is less than or equal to 30
 var marks = prompt("Enter your marks 1-100");
 marks = Number(marks);
-switch(marks) {
+console.log("marks entered: " + marks)
+switch(true) {
     case (marks > 90):
         console.log("AA");
         break;
@@ -237,7 +239,7 @@ switch(marks) {
     case (marks > 30 && marks < 40):
         console.log("DD");
         break;
-    case (marks <= 300):
+    case (marks <= 30):
         console.log("FF");
         break;
     default:
@@ -256,6 +258,7 @@ multiplicationTable(prompt("Enter a number for multiplication series"));
 
 // Funnctionn to calculate the Factorial of a Number
 function factorialcalculate(a) {
+    a = Number(a);
     var factValue = 1;
     for(var i=a; i>0; i--) {
         factValue = factValue * i;
@@ -263,7 +266,7 @@ function factorialcalculate(a) {
     return factValue;
 }
 
-console.log(factorialcalculate(4));
+console.log(factorialcalculate(prompt("Enter the number for the factorial")));
 
 // Output: var x = 10 + "1"; console.log(x); typeof x;
 // "101"
@@ -274,10 +277,26 @@ console.log(factorialcalculate(4));
 // Take two numbers and what to do with that number from user.
 // Define an object with these function (add, sub, multiply, divide). Perform the operation
 var mathMethods = {
-    add: console.log(a+b),
-    sub: console.log(a-b),
-    multiply: console.log(a*b),
-    divide: console.log(a/b),
+    add: function add(a, b) {
+        a = Number(a);
+        b = Number(b);
+        console.log(a+b);
+    },
+    sub: function sub(a, b) {
+        a = Number(a);
+        b = Number(b);
+        console.log(a-b);
+    },
+    multiply: function multiply(a, b) {
+        a = Number(a);
+        b = Number(b);
+        console.log(a*b);
+    },
+    divide: function divide(a, b) {
+        a = Number(a);
+        b = Number(b);
+        console.log(a/b);
+    }
 }
 
 var num1 = prompt("Enter the first Number");
@@ -286,16 +305,16 @@ var operation = prompt("Enter the operation you need to perform");
 operation = operation.toLowerCase();
 switch(operation) {
     case "add":
-        mathMethods.add;
+        mathMethods.add(num1, num2);
         break;
     case "sub":
-        mathMethods.sub;
+        mathMethods.sub(num1, num2);
         break;
     case "multiply":
-        mathMethods.multiply;
+        mathMethods.multiply(num1, num2);
         break;
     case "divide":
-        mathMethods.divide;
+        mathMethods.divide(num1, num2);
         break;
 }       
 
