@@ -83,9 +83,15 @@ function sumMultiples3And5() {
     var sum = 0;
     for (var i=0; 3*i < 1000; i++) {
         if (5*i < 1000) {
-            sum = sum + (3*i) + (5*i);
+            if (((3*i)%15) !== 0) {
+                sum = sum + (3*i) + (5*i);
+            } else {
+                sum = sum + (5*i);
+            }
         } else {
-            sum = sum + (3*i)
+            if (((3*i)%15) !== 0) {
+                sum = sum + (3*i)
+            }
         }
     }
     return sum
