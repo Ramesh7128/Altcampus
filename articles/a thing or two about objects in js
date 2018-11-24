@@ -1,0 +1,116 @@
+A thing or two about Objects in Js.
+Objects are the fundamental blocks in JavaScript or for that matter any objected oriented programming language. Understanding how objects work will definitely make you understand JavaScript as JavaScript is all about objects.
+what are objects? and why do we need them?
+As a very simple definition, objects are nothing but collection of different types of data. When it comes to object oriented programming, its based on 4 core concepts.
+Encapsulation.
+Abstraction.
+Inheritance.
+Polymorphism. 
+
+For now, we will only look into how JavaScript deals with encapsulation parts and get back to the rest when we explain other concepts.
+Encapsulation is a process of bundling different properties into one single reference variable. Objects are mainly used in places where we need to target multiple properties and methods(functions) under one roof. lets look into an example.
+say we need to store a specific set of properties of all students in a class. Properties being name, age, marks in 3 subjects and a function which calculates the sum of the 3 the marks obtained.
+if this has to be done in a non object way(Procedural way), we should go about creating name variables for all the students, likewise do the same for their age property and marks property and have a function which takes in the all the subject marks as parameters and gives you a total.
+let name1 = "Arun";
+let name2 = "vaibhav";
+let age1 = 23;
+let age2 = 23;
+....
+function sumTotal(mark1,mark2,mark3) {
+    let sumMarks = mark1 + mark2 + mark3;
+    return sumMarks;
+}
+let totaMarks1 = sumTotal(23, 35, 35);
+.... and so on for the rest.
+Now lets look at object oriented approach.
+function Student(name, age, mark1, mark2, mark3) {
+    this.name = name;
+    this.age = age;
+    this.mark1 = mark1;
+    this.mark2 = mark2;
+    this.mark3 = mark3;
+    this.sumTotal = function() {
+        let sumMarks = this.mark1 + this.mark2 + this.mark3;
+        return sumMarks;
+    }
+}
+student1 = new Student('Arun', '23', 35, 55, 63);
+student1.totalMarks = student1.sumTotal();
+student2 = new Student('vaibhav', '23', 55, 65, 73);
+student2.totalMarks = student1.sumTotal();
+// each students properties can be accessed by their properties name // and instance created. for eg, student1's properties can be //accessed by,
+console.log(`student name: ${student1.name}, student age: ${student1.age}`}
+In the above example we can keep creating more student objects by calling the student constructor function, with the required parameters.
+Even though this was a very simple example to understand objects in JavaScript, we are likely to encounter more such similar problems in our every day work. structuring our code become a lot simpler when you we take the object way over the procedural way.
+Now we that we have known why we need objects, let see the different ways we could create one.
+How to create an object?
+We created the above object using an object constructor function. There are other ways of creating objects.
+Different ways of creating an object.
+object literal way 
+factory functions.
+object constructor functions.
+
+Object literal way.
+
+var a = {
+    color: "red",
+    name: "apple",
+    type: "fruit"
+}
+//notice the trailing comma after every line, this is option for the //last element(type: "fruit")
+2. factory function.
+function fruit(name) {
+    return {
+        color: "red",
+        name: name,
+        type: "fruit"
+    }
+var apple = fruit("apple");
+3. Constructor functions.
+//By convention constructor function are always Capitalised.(first letter capital)
+function Fruit(name) {
+    this.name = name,
+    this.color = "red",
+    this.type = "fruit",
+}
+var apple = new Fruit("apple");
+when to use which method is entirely based on each ones use cases and preferences. But there are certain key distinct point that you can consider before choosing one option.
+//object literal way.
+var student1 = {
+    name: "Arjun",
+    age: 23,
+    marks = 53,
+}
+with the object literal notion you can always have only one object. Say in the example mentioned above to create an another student object, you need to copy the entire section again with different property values.
+the Factory function and Constructor function lets you do the same thing, till we bring in the concept of prototypal inheritance. Protypal inheritance makes Constructor function the more efficient and preferred choice especially when we have many methods inside the object and its being used to instantiate multiple objects. Protypal inheriatance is a topic which requires a blog for itself, for now you can think protypal inheritance is concept by which constructor methods do not have to go about creating common functions every time a new object is instantiated. This makes the Constuctor way of creating object more memory efficient when compared over the Factory functions.
+
+Weighing down these points its totally upto the user to make a calculated decision on which method he wishes to settle for.
+Ways of accessing/modifying Objects properties.
+An object once created can be accessed, modified, new properties can be added, deleted with ease.
+we can either do this using dot(.) notation or by square brackets[].
+lets look into an example.
+function Student() {
+    this.name = "Rahul";
+    this.section = "A";
+    this.age = 23;
+}
+var student1 = new Student();
+var student2 = new Student();
+in the code section above student1 variable will have access to all the properties of Student object and can access it either by,
+//Dot notation
+console.log(student1.name); // Rahul
+console.log(student1.section); // A
+//bracket notation
+console.log(student1['name']); //Rahul
+console.log(student1['section']); //A
+//note : the key is wrapped within quotes if its the actual key, if //its a variable holding the key string, then you need not wrap them //within quotes. eg:
+//let nameKey = "name";
+//student1[nameKey] will produce the same result.
+these two ways behave the same way in most of the cases where the key is a single word. In the above example when we say student1.section, the section is the key and the output(Rahul) is the value. suppose say there is a key by the name no of rooms in this case the dot notation would and we would be left with only square brackets to access the value of that particular key.
+let house = {
+    "no of rooms": 3,
+    color: "red",
+    type: "individual"
+}
+In above example the house object is created with keys no of rooms, color and type. We would be able to access the color property and type by using either dot(.) notation or square brackets, but if we need to access the no of rooms then we will have to use only the square brackets with key wrapped within quotes. 
+console.log(student1['no of rooms']); //3

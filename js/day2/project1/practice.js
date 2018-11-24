@@ -45,9 +45,9 @@ function mathOperations(a, b) {
     var sub = a - b;
     var multiplication = a * b;
     if (b === 0) {
-        var division = "Infinity"
+        var division = "Infinity";
     } else {
-        var division = a/b; 
+        var division = a/b;
     }
     alert(
         "Sum: " + sum + "\n" +
@@ -56,7 +56,7 @@ function mathOperations(a, b) {
         "Division: " + division
     );
 }
-mathOperations(32,"4");
+mathOperations(32, "4");
 
 // Function to display a number if user enters negative number
 function checkNegative(a) {
@@ -118,11 +118,11 @@ checkOddEven(3);
 // Funnction to take two input and show the relation using =, > or < i.e (21,45) 21 < 45, (23,12) 23 > 12
 function showRelation(a,b) {
     if (a > b) {
-        console.log(a + "> " + b);
+        console.log(a + " > " + b);
     } else if (a < b) {
-        console.log(a + "< " + b);
+        console.log(a + " < " + b);
     } else {
-        console.log(a + "= " + b);
+        console.log(a + " = " + b);
     }
 }
 

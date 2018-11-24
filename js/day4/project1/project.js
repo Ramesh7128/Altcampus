@@ -24,7 +24,7 @@ console.log(colors.pop());
 console.log(colors.length);
 
 //10.Write a for loop to iterate through every color in the array and print each color's value to the console.
-for (var i=0; i< colors.length; i++) {
+for (var i = 0; i < colors.length; i++) {
     console.log(i,colors[i]);
 }
 

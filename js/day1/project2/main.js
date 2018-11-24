@@ -12,17 +12,17 @@ var amount = 0;
 // You'll also buy accessories for each phone as long as your purchase amount is below your spending threshold.
 var amountAccesoryInclusive = 0;
 amount = amount + PHONE_PRICE;
-var newAmount =  amount
+var newAmount =  amount;
 if (amount > bank_balance) {
     var newAmount = amount;
     amount = 0;
 }
 while(newAmount < bank_balance) {
-    newAmount = amount + PHONE_PRICE
+    newAmount = amount + PHONE_PRICE;
     if (newAmount < bank_balance) {
         amount = newAmount
     }   
-    amountAccesoryInclusive = amount + amountAccesoryInclusive 
+    amountAccesoryInclusive = amount + amountAccesoryInclusive; 
     if (amountAccesoryInclusive < SPENDING_THRESHOLD) {
         amount = amount + ACCESSORY_PRICE;
     }
@@ -58,7 +58,7 @@ console.log(formatAmount(amount))
 // Write a program that prints the numbers from 1 to 100. But for multiples of three print “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which are multiples of both three and five print “FizzBuzz”.
 
 function fizzbuzz () {
-    for(var i = 1; i<100; i++) {
+    for(var i = 1; i < 100; i++) {
         var message = (i%3 === 0 && i%5 === 0)? "FizzBuzz":
             (i%3 === 0) ? "Fizz":
             (i%5 === 0) ? "Buzz":

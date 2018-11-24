@@ -102,7 +102,7 @@ function multiply(x, y) {
  * @param {number} b
  * @return {boolean} `a` is larger than `b`
  */
-function (a, b) {
+function checkGreater(a, b) {
     return (a > b)
 }
 
@@ -113,7 +113,7 @@ function (a, b) {
  * @return {boolean} `a` is smaller than `b`
  */
 
-function checkLarger(a, b) {
+function checkSmaller(a, b) {
     return (a < b)
 }
 
@@ -123,7 +123,7 @@ function checkLarger(a, b) {
  * @param {number} b
  * @return {boolean} the numbers are equal
  */
-function checkLarger(a, b) {
+function checkEquality(a, b) {
     return (a == b)
 }
 
@@ -192,6 +192,13 @@ function checkEven(n) {
  * @param {object} restaurant   represents a restaurant object
  * @return {object} restaurant
  */
+var restaurant = {};
+if ('reviews' in restaurant) {
+    restaurant.reviews += 1; 
+} else {
+    restaurant.reviews = 1;
+}
+
 
 
 /**
@@ -220,3 +227,5 @@ function circle(radius) {
     }
     return circle;
 }
+
+circle(10);

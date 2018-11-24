@@ -1,0 +1,44 @@
+
+/* #clock { */
+    /* width: 500px;
+    height: 500px; */
+    /* text-align: center; */
+    /* border: 10px solid black;
+    border-radius: 50%; */
+/* } */
+
+#secondhand {
+    width: 2px;
+    height: 200px;
+    /* display: inline-block; */
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    background: black;
+    border: 2px solid black;
+}
+
+#minutehand {
+    width: 2px;
+    height: 150px;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    background: black;
+    border: 2px solid black;
+}
+
+#hourhand {
+    width: 2px;
+    height: 100px;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;    
+    background: black;
+    border: 2px solid black;
+}
+
+.rotateonce {
+    transition: transform 1s linear;
+    transform-origin: bottom center;
+}

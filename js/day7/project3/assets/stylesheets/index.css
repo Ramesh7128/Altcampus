@@ -1,0 +1,31 @@
+
+html {
+    font-family: sans-serif;
+    color: #333;
+}
+body {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+div, article {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #dedede;
+}
+.redborder {
+    border: 1px solid red;
+}
+.orangeBorder {
+    border: 1px solid orange;
+}
+.blueBorder {
+    border: 1px solid blue;
+}
+.greenBorder {
+    border: 1px solid green;
+}
+
+.greyBorder {
+    border: 1px solid yellow;
+}
