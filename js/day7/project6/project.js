@@ -18,10 +18,18 @@ document.getElementById('hourhand').classList.add('rotateonce');
 
 rotateDegSeconds = rotateDegSeconds + (6*second);
 rotateDegMin = rotateDegMin + (6*minute);
-rotateDegHour = rotateDegHour + (30*hour) + ((rotateDegMin/60)*30) + ((rotateDegSeconds/3600) * 30);
+rotateDegHour = rotateDegHour + (30*hour) + ((minute/60)*30) + ((second/3600) * 30);
 console.log(rotateDegSeconds, rotateDegMin, rotateDegHour);
 
+function colorChange() {
+    var firstIndex = Math.floor(Math.random() * Math.floor(254));
+    var secondIndex = Math.floor(Math.random() * Math.floor(254));
+    var thirdIndex = Math.floor(Math.random() * Math.floor(254));
+    document.body.style.background = `rgb(${firstIndex},${secondIndex},${thirdIndex})`;
+}
+
 function rotateHands() {
+    colorChange();
     document.getElementById('secondhand').style.transform = `rotate(${rotateDegSeconds}deg)`;
     document.getElementById('minutehand').style.transform = `rotate(${rotateDegMin}deg)`;
     document.getElementById('hourhand').style.transform = `rotate(${rotateDegHour}deg)`;

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <title>To DOist</title>
+</head>
+<body>
+    <h1>To Doist</h1>
+    <div class="wrapper">
+        <!-- input section -->
+        <div id='input-box'>
+            <input id="input-text" placeholder="Enter your todays to do!!" type="text" name='todo'>
+        </div>
+        <!-- end input section -->
+        <!-- display section for created to do's -->
+        <div id='display-box'>
+            <div class="todo-list">
+                <h2>To Do:</h2>
+                    <ul id="todo-list-section">
+                    </ul>
+            </div>
+            <div class="deleted-list"> 
+                <h2>Deleted List:</h2>
+                    <ul id="deleted-list-section">
+                    </ul>
+            </div>
+            <div class='done-list'>
+                <h2>Done List:</h2>
+                    <ul id="done-list-section">
+                    </ul>
+            </div>
+        </div>
+        <!-- end display section -->
+    </div>
+    <script src="project.js"></script>
+</body>
+</html>
