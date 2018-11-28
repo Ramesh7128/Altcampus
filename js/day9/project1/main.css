@@ -1,19 +1,27 @@
 body {
-    background-color: aqua;
+    background-color: #ffffff;
 }
 h2 {
     text-align: center
 }
 input {
-    width: 350px;
+    width: 300px;
     height: 50px;
     font-size: 20px;
+    border-top: transparent !important;
+    border-left: transparent !important;
+    border-right: transparent !important;
+    border-bottom: 4px solid !important;
+}
+input:focus {
+    outline: none;
 }
 
 .wrapper {
     margin: 0 auto;
     width: 80%;
 }
+
 #display-box {
     margin-top: 20px;
 }
@@ -24,23 +32,50 @@ input {
 .todo-list {
     display: inline-block;
     vertical-align: top;
-    width: 30%;
-    border: 1px solid black;
+    width: 32%;
+    border: 2px solid black;
+    border-radius: 10px;
     padding: 2px;
 }
 
 .deleted-list {
     display: inline-block;
     vertical-align: top;
-    width: 30%;
-    border: 1px solid black;
+    width: 32%;
+    border: 2px solid black;
     padding: 2px;
+    border-radius: 10px;
 }
 
 .done-list {
     display: inline-block;
     vertical-align: top;
-    width: 30%;
-    border: 1px solid black;
+    width: 32%;
+    border: 2px solid black;
     padding: 2px;
+    border-radius: 10px;
+}
+
+.action-icons {
+    float: right;
+    padding-right: 10px;
+    visibility: hidden;
+}
+
+.new-list-element {
+    padding-bottom: 10px;
+}
+
+.new-list-element:hover .action-icons{
+    visibility: visible;
+}
+
+.fa {
+    padding: 4px;
+}
+
+#edit-text {
+    widows: 60%;
+    height: 20px;
+    
 }
