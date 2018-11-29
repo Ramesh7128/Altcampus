@@ -5,6 +5,7 @@
     border: 2px solid black;
     display: inline-block;
     text-align: center;
+    margin: 5px;
 }
 
 #wrapper {

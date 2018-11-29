@@ -1,0 +1,95 @@
+h2 {
+    text-align: center
+}
+.wrapper {
+    margin: 0 auto;
+    width: 80%;
+}
+input {
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    border-top: transparent !important;
+    border-left: transparent !important;
+    border-right: transparent !important;
+    border-bottom: 4px solid !important;
+}
+input:focus {
+    outline: none;
+}
+#input-box {
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    width: 50%
+}
+
+#search-box {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    width: 40%
+
+}
+
+
+#display-box {
+    margin-top: 20px;
+}
+#input-box {
+    text-align: center;
+}
+
+.category-box {
+    display: inline-block;
+    vertical-align: top;
+    width: 32%;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 2px;
+    margin: 5px;
+    margin-top: 25px;
+    
+}
+
+.deleted-list {
+    display: inline-block;
+    vertical-align: top;
+    width: 32%;
+    border: 2px solid black;
+    padding: 2px;
+    border-radius: 10px;
+}
+
+.done-list {
+    display: inline-block;
+    vertical-align: top;
+    width: 32%;
+    border: 2px solid black;
+    padding: 2px;
+    border-radius: 10px;
+}
+
+.action-icons {
+    float: right;
+    padding-right: 10px;
+    visibility: hidden;
+}
+
+.new-list-element {
+    padding-bottom: 10px;
+}
+
+.new-list-element:hover .action-icons{
+    visibility: visible;
+}
+
+.fa {
+    padding: 4px;
+}
+
+#edit-text {
+    widows: 60%;
+    height: 20px;
+    
+}

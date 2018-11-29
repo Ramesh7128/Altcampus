@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <title>Bookly</title>
+</head>
+<body>
+    <h1>Bookly</h1>
+    <div class="wrapper">
+        <!-- input section -->
+        <div id='input-box'>
+            <input id="input-text" placeholder="Enter the books name!!" type="text">
+            <select id='category-select'>
+                <option value='fiction'>Fiction</option>
+                <option value='non-fiction'>NonFiction</option>
+                <option value='education'>Education</option>
+                <option value='biographies'>Biographies</option>
+                <option value='comics'>Comics</option>
+                <option value='self-help'>Self Help</option>
+            </select>
+            <button id='add-books'>Submit</button>
+        </div>
+        <!-- end input section -->
+        <!-- search section -->
+        <div id='search-box'>
+            <input id="search-text" placeholder="Search for your favourite books!">
+        </div>
+        <!-- end search section -->
+        <!-- display section for created books category based. -->
+        <div id='display-books'>
+        </div>
+        <!-- end display section -->
+    </div>
+    <script src="project.js"></script>
+</body>
+</html>
