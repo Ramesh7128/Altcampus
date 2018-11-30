@@ -92,9 +92,25 @@ function createBookListInCategory(categoryName, key) {
     document.getElementById(`div-${categoryName}-${key}`).appendChild(newSpan);
 }
 
-function displaybooks(searchString="") {
+function displayReadingListBooks(searchString="") {
     
-    document.getElementById('display-books').innerHTML = '';
+    for (let key in books['book']) {
+        if (searchString) {
+            if (!(key.toLowerCase().includes(searchString.toLocaleLowerCase()))) {
+                continue;
+            }
+        }
+        if ((books['book'][key]['readingList']) && (!(document.getElementsByClassName('readingList').length > 0))) {
+            creatingCategoryBox('readingList');
+        }
+        if (books['book'][key]['readingList']) {
+            createBookListInCategory('readingList', key);
+        }
+    }    
+}
+
+function displayCategoryBooks(searchString="") {
+    
     for (let key in books['book']) {
         if (searchString) {
             if (!(key.toLowerCase().includes(searchString.toLocaleLowerCase()))) {
@@ -104,16 +120,15 @@ function displaybooks(searchString="") {
         if (!(document.getElementsByClassName(books['book'][key]['category']).length > 0)) {
             creatingCategoryBox(books['book'][key]['category']);
         }
-
-        if ((books['book'][key]['readingList']) && (!(document.getElementsByClassName('readingList').length > 0))) {
-            creatingCategoryBox('readingList');
-        }
-
         createBookListInCategory(books['book'][key]['category'], key);
-        if (books['book'][key]['readingList']) {
-            createBookListInCategory('readingList', key);
-        }
     }    
+}
+
+
+function displaybooks(searchString="") {
+    document.getElementById('display-books').innerHTML = '';
+    displayReadingListBooks(searchString);
+    displayCategoryBooks(searchString);
 }
 
 document.getElementById('add-books').addEventListener('click', function(event) {

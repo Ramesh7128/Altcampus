@@ -4,14 +4,23 @@
     height: 100px;
     border: 2px solid black;
     display: inline-block;
-    text-align: center;
     margin: 5px;
+    position: relative;
     transition: transform 0.8s;
     transform-style: preserve-3d;
 }
 
 .front-side, .back-side {
     position: absolute;
+    backface-visibility: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.back-side {
+    transform: rotateY(180deg);
 }
 
 #wrapper {
