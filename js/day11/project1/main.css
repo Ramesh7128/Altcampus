@@ -10,6 +10,10 @@
     transform-style: preserve-3d;
 }
 
+.front-side, .back-side {
+    position: absolute;
+}
+
 #wrapper {
     position: fixed;
     width: 40%;

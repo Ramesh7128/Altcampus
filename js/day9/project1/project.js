@@ -1,9 +1,8 @@
 "use strict";
 // capture the input and append it to a list, later use localstorage.
-let todo = {};
-let deletedList = {};
-let doneList = {};
-let count = 0;
+let todo = JSON.parse(localStorage['todo']) || {};
+let deletedList = JSON.parse(localStorage['deletedList']) || {};
+let doneList = JSON.parse(localStorage['doneList']) || {};
 
 function randomGenerator() {
     return Math.floor(Math.random() * Math.floor(25893));
@@ -19,7 +18,7 @@ document.addEventListener('keydown', function(event) {
                     id: key,
                     name: value,
                 }
-                todo[key] = item;
+                todo[key] = item; 
                 document.getElementById("input-text").value = "";
                 display("todo-list-section");
             }
@@ -35,6 +34,7 @@ document.addEventListener('keydown', function(event) {
                 display("todo-list-section");
             }
         }
+        localStorage['todo'] = JSON.stringify(todo);
     }
 });
 
@@ -70,6 +70,9 @@ document.addEventListener('click', function(event) {
             display('done-list-section');
         }
     }
+    localStorage['todo'] = JSON.stringify(todo);
+    localStorage['deletedList'] = JSON.stringify(deletedList);
+    localStorage['doneList'] = JSON.stringify(doneList);
 });
 
 document.addEventListener('dblclick', function(event) {
@@ -86,4 +89,8 @@ document.addEventListener('dblclick', function(event) {
         newSpanElement.parentElement.parentElement.replaceChild(inputElement, newSpanElement.parentElement);
     }
 });
+
+display("todo-list-section");
+display('done-list-section');
+display('deleted-list-section');
 

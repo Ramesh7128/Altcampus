@@ -6,7 +6,7 @@ h2 {
     width: 80%;
 
 }
-input {
+#input-text, #search-text {
     width: 300px;
     height: 50px;
     font-size: 20px;
@@ -69,9 +69,12 @@ input:focus {
     padding: 4px;
 }
 #edit-text {
-    widows: 60%;
-    height: 20px;
-    
+    widows: 50%;
+    border-top: transparent !important;
+    border-left: transparent !important;
+    border-right: transparent !important;
+    border-bottom: 2px solid !important;
+
 }
 .new-list-element:hover .list-actions-element{
     visibility: visible;

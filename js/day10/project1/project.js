@@ -1,13 +1,8 @@
 "use strict";
 // capture the input and append it to a list, later use localstorage.
-let books = {};
-books['category'] = [];
-books['book'] = {};
-let count = 0;
-
-function randomGenerator() {
-    return Math.floor(Math.random() * Math.floor(25893));
-}
+let books = (('books' in localStorage) ? JSON.parse(localStorage['books']):{});
+books['category'] = (('category' in books) ? books['category']: []);
+books['book'] = (('book' in books)? books['book']: {});
 
 function addbooks(book, category) {
     
@@ -23,6 +18,7 @@ function addbooks(book, category) {
     }
     if (!(book.replace(/ /g,'') in books['book'])) {
         books['book'][book.replace(/ /g,'')] = item;
+        localStorage['books'] = JSON.stringify(books);
     } else {
         alert("Book with the same name already exists");
     }
@@ -40,6 +36,7 @@ function editBooks(editedValue, key) {
         }
         books['book'][editedValue.replace(/ /g,'')] = item;
         delete books['book'][key];
+        localStorage['books'] = JSON.stringify(books);
     } else {
         alert("Book with the same name already exists");
     }
@@ -122,14 +119,15 @@ function displaybooks(searchString="") {
 document.getElementById('add-books').addEventListener('click', function(event) {
     let book = document.getElementById('input-text').value.toLowerCase().trim();
     let category = document.getElementById('category-select').value.toLowerCase().trim();
-    addbooks(book, category); 
-    displaybooks();
+    if (!(/^ *$/.test(book))) {
+        addbooks(book, category); 
+        displaybooks();
+    }
 });
 
 document.getElementById('display-books').addEventListener('keyup', function(event) {
     if (event.keyCode == '13') {
         let editedValue = document.getElementById('edit-text').value.toLowerCase().trim();
-        console.log(editedValue);
         let key = document.getElementById('edit-text').dataset.key;
         if (!(/^ *$/.test(editedValue))) {
             editBooks(editedValue, key); 
@@ -152,8 +150,8 @@ document.addEventListener('dblclick', function(event) {
         inputElement.id = 'edit-text';
         inputElement.dataset.key = id;
         inputElement.value = books['book'][id].name;
-        document.getElementById(`div-${id}`).innerHTML = '';
-        document.getElementById(`div-${id}`).appendChild(inputElement);
+        document.getElementById(`li-${books['book'][id].category}-${id}`).innerHTML = '';
+        document.getElementById(`li-${books['book'][id].category}-${id}`).appendChild(inputElement);
     }
 });
 
@@ -164,6 +162,7 @@ document.addEventListener('click', function(event) {
         if(action == 'delete') {
             console.log(id);
             delete books['book'][id];
+            localStorage['books'] = JSON.stringify(books);
             displaybooks();
         } else if(action == "done") {
             if (books['book'][id]['read']) {
@@ -172,6 +171,7 @@ document.addEventListener('click', function(event) {
                 books['book'][id]['read'] = true;
                 books['book'][id]['readingList'] = false;
             }
+            localStorage['books'] = JSON.stringify(books);
             displaybooks();
         } else if(action == 'star') {
             if (books['book'][id]['readingList']) {
@@ -179,7 +179,10 @@ document.addEventListener('click', function(event) {
             } else {
                 books['book'][id]['readingList'] = true;
             }
+            localStorage['books'] = JSON.stringify(books);
             displaybooks();
         }
     }
 });
+
+displaybooks();
