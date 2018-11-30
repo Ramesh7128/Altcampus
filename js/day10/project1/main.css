@@ -4,6 +4,7 @@ h2 {
 .wrapper {
     margin: 0 auto;
     width: 80%;
+
 }
 input {
     width: 300px;
@@ -31,19 +32,10 @@ input:focus {
     width: 40%
 
 }
-
-
-#display-box {
-    margin-top: 20px;
-}
-#input-box {
-    text-align: center;
-}
-
 .category-box {
     display: inline-block;
     vertical-align: top;
-    width: 32%;
+    width: 30%;
     border: 2px solid black;
     border-radius: 10px;
     padding: 2px;
@@ -51,45 +43,36 @@ input:focus {
     margin-top: 25px;
     
 }
-
-.deleted-list {
-    display: inline-block;
-    vertical-align: top;
-    width: 32%;
-    border: 2px solid black;
-    padding: 2px;
-    border-radius: 10px;
+#display-books {
+    margin-top: 20px;
 }
-
-.done-list {
-    display: inline-block;
-    vertical-align: top;
-    width: 32%;
-    border: 2px solid black;
-    padding: 2px;
-    border-radius: 10px;
+#input-box {
+    text-align: center;
 }
-
-.action-icons {
-    float: right;
-    padding-right: 10px;
-    visibility: hidden;
-}
-
 .new-list-element {
-    padding-bottom: 10px;
+    width: 90%;
+    padding-top: 5px;
 }
-
-.new-list-element:hover .action-icons{
-    visibility: visible;
+.list-span-element {
+    width:50%;
+    display: inline-block;
+    vertical-align: top;
 }
-
+.list-actions-element {
+    width: 45%;
+    text-align: center;
+    visibility: hidden;
+    display: inline-block;
+    vertical-align: top;
+}
 .fa {
     padding: 4px;
 }
-
 #edit-text {
     widows: 60%;
     height: 20px;
     
+}
+.new-list-element:hover .list-actions-element{
+    visibility: visible;
 }

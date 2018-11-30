@@ -10,6 +10,7 @@ function randomGenerator() {
 }
 
 function addbooks(book, category) {
+    
     if (!(books['category'].includes(category))) {
         console.log(category, books['category']);
         books['category'].push(category);
@@ -27,10 +28,25 @@ function addbooks(book, category) {
     }
 }
 
+function editBooks(editedValue, key) {
+    
+    if (!(editedValue.replace(/ /g,'') in books['book'])) {
+        books['book'][editedValue.replace(/ /g,'')] = {};
+        let item = {
+            name: editedValue,
+            category: books['book'][key]['category'],
+            read: books['book'][key]['read'],
+            readingList: books['book'][key]['readingList']
+        }
+        books['book'][editedValue.replace(/ /g,'')] = item;
+        delete books['book'][key];
+    } else {
+        alert("Book with the same name already exists");
+    }
+}
+
 function displaybooks(searchString="") {
-    // if (category) {
-        // can use category to render only that particular category.
-    // } else {
+    
     let parentCategory = document.getElementById('display-books');
     document.getElementById('display-books').innerHTML = '';
     for (let key in books['book']) {
@@ -48,17 +64,41 @@ function displaybooks(searchString="") {
             newDiv.innerHTML += `<ul id=${books['book'][key]['category']}></ul>`;
             parentCategory.appendChild(newDiv);
         }
-        var newElement = document.createElement('li');
+
+        let newElement = document.createElement('li');
         newElement.className = 'new-list-element';
-        newElement.innerHTML += '<div>';
-        if (books['book'][key]['read']) {
-            newElement.innerHTML += `<span id=${key} data-key=${key} class='todo-element'><strike>${books['book'][key]['name']}</strike></span>`;
-        } else {
-            newElement.innerHTML += `<span id=${key} data-key=${key} class='todo-element'>${books['book'][key]['name']}</span>`;
-        }
-        newElement.innerHTML += `<span class='action-icons'><i data-action="done" data-key=${key} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${key} class="fa fa-trash" aria-hidden="true"></i></span>`;
-        newElement.innerHTML += '</div>';
+        newElement.id = `li-${key}`;
         document.getElementById(books['book'][key]['category']).appendChild(newElement);
+        
+        let newdiv = document.createElement('div');
+        newdiv.id = `div-${key}`;
+        document.getElementById(`li-${key}`).appendChild(newdiv);
+        
+        if (books['book'][key]['read']) {
+            let newSpan = document.createElement('span');
+            newSpan.id = key;
+            newSpan.dataset.key = key;
+            newSpan.className = 'list-span-element';
+            newSpan.innerHTML = `<strike>${books['book'][key]['name']}</strike>`;
+            document.getElementById(`div-${key}`).appendChild(newSpan);
+            // newElement.innerHTML += `<span id=${key} data-key=${key} class='todo-element'><strike>${books['book'][key]['name']}</strike></span>`;
+        } else {
+            let newSpan = document.createElement('span');
+            newSpan.id = key;
+            newSpan.dataset.key = key;
+            newSpan.className = 'list-span-element';
+            newSpan.textContent = books['book'][key]['name'];
+            document.getElementById(`div-${key}`).appendChild(newSpan);
+        }
+
+        let newSpan = document.createElement('span');
+        newSpan.className = 'list-actions-element';
+        if (books['book'][key]['readingList']) {
+            newSpan.innerHTML = `<i data-action="star" data-key=${key} class="fas fa-star" aria-hidden="true"></i><i data-action="done" data-key=${key} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${key} class="fa fa-trash" aria-hidden="true"></i>`;
+        } else {
+            newSpan.innerHTML = `<i data-action="star" data-key=${key} class="far fa-star" aria-hidden="true"></i><i data-action="done" data-key=${key} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${key} class="fa fa-trash" aria-hidden="true"></i>`;
+        }
+        document.getElementById(`div-${key}`).appendChild(newSpan);
     }    
 }
 
@@ -69,28 +109,34 @@ document.getElementById('add-books').addEventListener('click', function(event) {
     displaybooks();
 });
 
-document.addEventListener('keyup', function(event) {
+document.getElementById('display-books').addEventListener('keyup', function(event) {
+    if (event.keyCode == '13') {
+        let editedValue = document.getElementById('edit-text').value.toLowerCase().trim();
+        console.log(editedValue);
+        let key = document.getElementById('edit-text').dataset.key;
+        if (!(/^ *$/.test(editedValue))) {
+            editBooks(editedValue, key); 
+            displaybooks();
+        }
+    }
+});
+
+document.getElementById('search-box').addEventListener('keyup', function(event) {
     let searchString = document.getElementById('search-text').value.toLowerCase();
     console.log(searchString);
     displaybooks(searchString);
 });
 
 document.addEventListener('dblclick', function(event) {
-    console.log(event, "event");
-    console.log(event.target.dataset.key, "before editing display");
     displaybooks();
     if (event.target.tagName == 'SPAN') {
-        alert("dblclick triggered");
         let id = event.target.dataset.key;
-        console.log(event.target.dataset.key);
         let inputElement = document.createElement('input');
         inputElement.id = 'edit-text';
         inputElement.dataset.key = id;
         inputElement.value = books['book'][id].name;
-        let newSpanElement = document.getElementById(id);
-        console.log(newSpanElement,'this is the element clicked');
-        console.log(newSpanElement.parentElement.parentElement);
-        newSpanElement.parentElement.parentElement.replaceChild(inputElement, newSpanElement.parentElement);
+        document.getElementById(`div-${id}`).innerHTML = '';
+        document.getElementById(`div-${id}`).appendChild(inputElement);
     }
 });
 
@@ -103,100 +149,19 @@ document.addEventListener('click', function(event) {
             delete books['book'][id];
             displaybooks();
         } else if(action == "done") {
-            books['book'][id]['read'] = true;
+            if (books['book'][id]['read']) {
+                books['book'][id]['read'] = false;
+            } else {
+                books['book'][id]['read'] = true;
+            }
+            displaybooks();
+        } else if(action == 'star') {
+            if (books['book'][id]['readingList']) {
+                books['book'][id]['readingList'] = false;
+            } else {
+                books['book'][id]['readingList'] = true;
+            }
             displaybooks();
         }
     }
 });
-
-// document.addEventListener('dblclick', function(event) {
-//     let Oldevent = event;
-//     display('todo-list-section');
-//     if (event.target.tagName == 'SPAN') {
-//         let id = event.target.dataset.key;
-//         let inputElement = document.createElement('input');
-//         inputElement.id = 'edit-text';
-//         inputElement.dataset.key = id;
-//         inputElement.value = todo[id].name;
-//         let newSpanElement = document.querySelectorAll(`[data-key="${id}"]`)[0];
-//         console.log(newSpanElement.parentElement.parentElement);
-//         newSpanElement.parentElement.parentElement.replaceChild(inputElement, newSpanElement.parentElement);
-//     }
-// });
-// == '13') {
-//         if (event.target.id=='input-text'){
-//             let value = document.getElementById("input-text").value;
-//             let key = randomGenerator();
-//             if (!(/^ *$/.test(value))) {
-//                 let item = {
-//                     id: key,
-//                     name: value,
-//                 }
-//                 todo[key] = item;
-//                 document.getElementById("input-text").value = "";
-//                 display("todo-list-section");
-//             }
-//         } else if (event.target.id=='edit-text') {
-//             let value = document.getElementById("edit-text").value;
-//             let key =  document.getElementById("edit-text").dataset.key;
-//             if (!(/^ *$/.test(value))) {
-//                 let item = {
-//                     id: key,
-//                     name: value,
-//                 }
-//                 todo[key] = item;
-//                 display("todo-list-section");
-//             }
-//         }
-//     }
-// });
-
-// function display(ulId) {
-//     let iterArray = ((ulId == "todo-list-section")? todo: (ulId == "deleted-list-section") ? deletedList: doneList);
-//     document.getElementById(ulId).innerHTML = '';
-//     for (let key in iterArray) {
-//         var newElement = document.createElement('li');
-//         newElement.className = 'new-list-element';
-//         newElement.innerHTML = '<div>';
-//         newElement.innerHTML += `<span data-key=${iterArray[key].id} class='todo-element'>${iterArray[key].name}</span>`;
-//         if (ulId == "todo-list-section") {
-//             newElement.innerHTML += `<span class='action-icons'><i data-action="done" data-key=${iterArray[key].id} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${iterArray[key].id} class="fa fa-trash" aria-hidden="true"></i></span>`;
-//         }
-//         newElement.innerHTML += '</div>';
-//         document.getElementById(ulId).appendChild(newElement);
-//     }
-// }
-
-// document.addEventListener('click', function(event) {
-//     if (event.target.tagName == "I") {
-//         let action = event.target.dataset.action;
-//         let id = event.target.dataset.key
-//         if(action == 'delete') {
-//             deletedList[id] = todo[id];
-//             delete todo[id];
-//             display("todo-list-section");
-//             display('deleted-list-section');
-//         } else if(action == "done") {
-//             doneList[id] = todo[id];
-//             delete todo[id];
-//             display("todo-list-section");
-//             display('done-list-section');
-//         }
-//     }
-// });
-
-// document.addEventListener('dblclick', function(event) {
-//     let Oldevent = event;
-//     display('todo-list-section');
-//     if (event.target.tagName == 'SPAN') {
-//         let id = event.target.dataset.key;
-//         let inputElement = document.createElement('input');
-//         inputElement.id = 'edit-text';
-//         inputElement.dataset.key = id;
-//         inputElement.value = todo[id].name;
-//         let newSpanElement = document.querySelectorAll(`[data-key="${id}"]`)[0];
-//         console.log(newSpanElement.parentElement.parentElement);
-//         newSpanElement.parentElement.parentElement.replaceChild(inputElement, newSpanElement.parentElement);
-//     }
-// });
-
