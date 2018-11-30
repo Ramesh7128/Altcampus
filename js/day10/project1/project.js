@@ -45,9 +45,58 @@ function editBooks(editedValue, key) {
     }
 }
 
+function creatingCategoryBox(categoryName) {
+
+    let parentCategory = document.getElementById('display-books');
+    let newDiv = document.createElement('div');
+    newDiv.classList.add('category-box');
+    newDiv.classList.add(categoryName);
+    newDiv.dataset.category = categoryName;
+    newDiv.innerHTML = `<h2>${categoryName}</h1\>`;
+    newDiv.innerHTML += `<ul id=${categoryName}></ul>`;
+    parentCategory.appendChild(newDiv);
+}
+
+function createBookListInCategory(categoryName, key) {
+
+    let newElement = document.createElement('li');
+    newElement.className = 'new-list-element';
+    newElement.id = `li-${categoryName}-${key}`;
+    document.getElementById(categoryName).appendChild(newElement);
+    
+    let newdiv = document.createElement('div');
+    newdiv.id = `div-${categoryName}-${key}`;
+    document.getElementById(`li-${categoryName}-${key}`).appendChild(newdiv);
+    
+    if (books['book'][key]['read']) {
+        let newSpan = document.createElement('span');
+        newSpan.id = key;
+        newSpan.dataset.key = key;
+        newSpan.className = 'list-span-element';
+        newSpan.innerHTML = `<strike>${books['book'][key]['name']}</strike>`;
+        document.getElementById(`div-${categoryName}-${key}`).appendChild(newSpan);
+        // newElement.innerHTML += `<span id=${key} data-key=${key} class='todo-element'><strike>${books['book'][key]['name']}</strike></span>`;
+    } else {
+        let newSpan = document.createElement('span');
+        newSpan.id = key;
+        newSpan.dataset.key = key;
+        newSpan.className = 'list-span-element';
+        newSpan.textContent = books['book'][key]['name'];
+        document.getElementById(`div-${categoryName}-${key}`).appendChild(newSpan);
+    }
+
+    let newSpan = document.createElement('span');
+    newSpan.className = 'list-actions-element';
+    if (books['book'][key]['readingList']) {
+        newSpan.innerHTML = `<i data-action="star" data-key=${key} class="fas fa-star" aria-hidden="true"></i><i data-action="done" data-key=${key} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${key} class="fa fa-trash" aria-hidden="true"></i>`;
+    } else {
+        newSpan.innerHTML = `<i data-action="star" data-key=${key} class="far fa-star" aria-hidden="true"></i><i data-action="done" data-key=${key} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${key} class="fa fa-trash" aria-hidden="true"></i>`;
+    }
+    document.getElementById(`div-${categoryName}-${key}`).appendChild(newSpan);
+}
+
 function displaybooks(searchString="") {
     
-    let parentCategory = document.getElementById('display-books');
     document.getElementById('display-books').innerHTML = '';
     for (let key in books['book']) {
         if (searchString) {
@@ -55,50 +104,18 @@ function displaybooks(searchString="") {
                 continue;
             }
         }
-        if (!(document.getElementsByClassName(books['book'][key]['category']).length > 0)) {      
-            let newDiv = document.createElement('div');
-            newDiv.classList.add('category-box');
-            newDiv.classList.add(books['book'][key]['category']);
-            newDiv.dataset.category = books['book'][key]['category'];
-            newDiv.innerHTML = `<h2>${books['book'][key]['category']}</h1\>`;
-            newDiv.innerHTML += `<ul id=${books['book'][key]['category']}></ul>`;
-            parentCategory.appendChild(newDiv);
+        if (!(document.getElementsByClassName(books['book'][key]['category']).length > 0)) {
+            creatingCategoryBox(books['book'][key]['category']);
         }
 
-        let newElement = document.createElement('li');
-        newElement.className = 'new-list-element';
-        newElement.id = `li-${key}`;
-        document.getElementById(books['book'][key]['category']).appendChild(newElement);
-        
-        let newdiv = document.createElement('div');
-        newdiv.id = `div-${key}`;
-        document.getElementById(`li-${key}`).appendChild(newdiv);
-        
-        if (books['book'][key]['read']) {
-            let newSpan = document.createElement('span');
-            newSpan.id = key;
-            newSpan.dataset.key = key;
-            newSpan.className = 'list-span-element';
-            newSpan.innerHTML = `<strike>${books['book'][key]['name']}</strike>`;
-            document.getElementById(`div-${key}`).appendChild(newSpan);
-            // newElement.innerHTML += `<span id=${key} data-key=${key} class='todo-element'><strike>${books['book'][key]['name']}</strike></span>`;
-        } else {
-            let newSpan = document.createElement('span');
-            newSpan.id = key;
-            newSpan.dataset.key = key;
-            newSpan.className = 'list-span-element';
-            newSpan.textContent = books['book'][key]['name'];
-            document.getElementById(`div-${key}`).appendChild(newSpan);
+        if ((books['book'][key]['readingList']) && (!(document.getElementsByClassName('readingList').length > 0))) {
+            creatingCategoryBox('readingList');
         }
 
-        let newSpan = document.createElement('span');
-        newSpan.className = 'list-actions-element';
+        createBookListInCategory(books['book'][key]['category'], key);
         if (books['book'][key]['readingList']) {
-            newSpan.innerHTML = `<i data-action="star" data-key=${key} class="fas fa-star" aria-hidden="true"></i><i data-action="done" data-key=${key} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${key} class="fa fa-trash" aria-hidden="true"></i>`;
-        } else {
-            newSpan.innerHTML = `<i data-action="star" data-key=${key} class="far fa-star" aria-hidden="true"></i><i data-action="done" data-key=${key} class="fa fa-check" aria-hidden="true"></i><i data-action="delete" data-key=${key} class="fa fa-trash" aria-hidden="true"></i>`;
+            createBookListInCategory('readingList', key);
         }
-        document.getElementById(`div-${key}`).appendChild(newSpan);
     }    
 }
 
@@ -153,6 +170,7 @@ document.addEventListener('click', function(event) {
                 books['book'][id]['read'] = false;
             } else {
                 books['book'][id]['read'] = true;
+                books['book'][id]['readingList'] = false;
             }
             displaybooks();
         } else if(action == 'star') {
