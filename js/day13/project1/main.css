@@ -8,12 +8,9 @@ body {
     position: relative;
 }
 
-.each-box {
-    width: 60px;
-    height: 60px;
+.todo-li {
+    margin-top: 10px;
+}
+.li-content {
     border: 2px solid black;
-    display: inline-block;
-    margin: 5px;
-    vertical-align: top;
-    position: relative;
 }
