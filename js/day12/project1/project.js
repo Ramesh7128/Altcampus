@@ -51,7 +51,7 @@ let hangManExtension = (function() {
         if (hangman['endGameType'] != 'win') {
             document.querySelector('#hangman-image img').setAttribute('src', `./img/hangman6.png`);
         } else {
-            document.querySelector('#hangman-image img').setAttribute('src', `./img/hangmanwin.png`);
+            document.querySelector('#hangman-image img').setAttribute('src', `./img/hangmanwin.jpg`);
         }
         clearInterval(setTimeOutHandler);
     }

@@ -56,14 +56,12 @@
             event.target.stopPropagation();
         }
         if (event.dataTransfer.getData('parentIndex') != event.target.parentElement.dataset.id) {
-            if (event.target.classList.contains('li-content')){
-                initialIndex = Number(event.dataTransfer.getData('parentIndex'));
-                secondaryIndex = Number(event.target.parentElement.dataset.id);
-                temp = todo[initialIndex];
-                todo[initialIndex] = todo[secondaryIndex];
-                todo[secondaryIndex] = temp;
-                display();
-            }
+            initialIndex = Number(event.dataTransfer.getData('parentIndex'));
+            secondaryIndex = Number(event.target.parentElement.dataset.id);
+            temp = todo[initialIndex];
+            todo[initialIndex] = todo[secondaryIndex];
+            todo[secondaryIndex] = temp;
+            display();
         }
         return false;
     });
