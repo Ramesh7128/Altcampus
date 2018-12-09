@@ -20,17 +20,21 @@ body {
 
 #puzzle-sec {
     text-align: center;
-    margin: 0 auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    /* margin: 0 auto; */
 }
 
 #jumbled-order-puzzles {
     width: 45%;
     display: inline-block;
+    vertical-align: top;
 }
 
 #ordered-grid {
     width: 45%;
     display: inline-block;
+    vertical-align: top;
 
 }
 .puzzle {
@@ -53,6 +57,11 @@ body {
 
 #ordered-grid .over {
     background-color:  white;
+}
+
+#input-file {
+    position: relative;
+    padding-right: 800px;
 }
 
 #result {
