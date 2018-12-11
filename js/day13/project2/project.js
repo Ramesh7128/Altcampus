@@ -1,6 +1,5 @@
 "use strict"
 let jigSawPuzzle = (function(){
-
     let widthpieces = 3;
     let heightpieces = 3;
     let imageArray = [];
@@ -10,12 +9,10 @@ let jigSawPuzzle = (function(){
     let initialGridArray = new Array(widthpieces*heightpieces).fill(false);
     let modifiedGridArray = new Array(widthpieces*heightpieces).fill(false);
     let moves = 0;
-    let eachWidthPieces = 500/widthpieces;
-    let eachHeightPieces = 500/heightpieces;
+    let eachWidthPieces = Math.round(500/widthpieces);
+    let eachHeightPieces = Math.round(500/heightpieces);
     
     function reset() {
-        widthpieces = 3;
-        heightpieces = 3;
         imageArray = [];
         matched = new Array(widthpieces*heightpieces).fill(false);
         filled = new Array(widthpieces*heightpieces).fill(false);
@@ -27,7 +24,7 @@ let jigSawPuzzle = (function(){
         document.getElementById('result').style.visibility = 'hidden';
     }
     
-    function shuffleImgArray(imgArray) {
+    function shuffleImgArray(imgArray=[]) {
         for(let i=imgArray.length-1; i>0; i--) {
             let randomIndex = Math.floor(Math.random() * (i+1));
             let temp = imgArray[randomIndex];
@@ -40,7 +37,6 @@ let jigSawPuzzle = (function(){
         document.getElementById('jumbled-order-puzzles').innerHTML = '';
         let imgParent = document.getElementById('jumbled-order-puzzles');
         for(let i=0; i<puzzleArray.length; i++) {
-    
             let newdiv = document.createElement('div');
             newdiv.classList.add('puzzle');
             newdiv.classList.add('img-size');
@@ -66,13 +62,16 @@ let jigSawPuzzle = (function(){
     function generatePuzzleArray() {
         let count = 0;
         imageArray = [];
+        
         for(let i=0; i>(-1*widthpieces*eachWidthPieces); i=i-(eachWidthPieces)) {
             for (let j=0; j>(-1*heightpieces*eachHeightPieces); j=j-(eachHeightPieces)) {
                 imageArray.push([`${j}px ${i}px`, count, true]);
                 count += 1;
             }
-            shuffleImgArray(imageArray);
         }
+        console.log(imageArray.length);
+        console.log(imageArray);
+        shuffleImgArray(imageArray);
     }
     
     function displayGrid(gridArray) {
@@ -99,6 +98,7 @@ let jigSawPuzzle = (function(){
     }
     
     function endGameSettings(message="You Win!!") {
+        document.getElementById('result').innerHTML = '';
         let resultDiv = document.getElementById('result');
         let messageDiv = document.createElement('div');
         messageDiv.textContent = message;
@@ -119,25 +119,19 @@ let jigSawPuzzle = (function(){
         console.log(file);
         let reader = new FileReader();
         reader.onloadend = function(event) {
-            // The file's text will be printed here
             console.log(reader.result);
             uploadedUrl = reader.result;
             reset();
             generatePuzzleArray();
             displayPuzzle(imageArray);
             displayGrid(modifiedGridArray);
-    
-            // console.log(uploadedUrl);
         };
-        // reader.readAsText(file);
         if(file){
             reader.readAsDataURL(file);
         }
-        // console.log(reader.result);
     })
     
     document.getElementById('jumbled-order-puzzles').addEventListener('dragstart', function(event) {
-        // event.target.style.opacity = '0.4';
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData('shuffledId', event.target.dataset.shuffledId);
         event.dataTransfer.setData('initialId', event.target.dataset.id);
@@ -146,7 +140,6 @@ let jigSawPuzzle = (function(){
     
     
     document.getElementById('ordered-grid').addEventListener('dragstart', function(event) {
-        // event.target.style.opacity = '0.4';
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData('initialId', event.target.dataset.id);
         event.dataTransfer.setData('source', 'ordered-grid');
@@ -188,23 +181,39 @@ let jigSawPuzzle = (function(){
                     endGameSettings();
                 }
             } else if (event.dataTransfer.getData('source') == 'ordered-grid') {
+                alert('check');
                 moves +=1;
                 let initialId =  Number(event.dataTransfer.getData('initialId'));
                 let orderGridBoxId = Number(event.target.dataset.id);
-                // console.log(puzzleBoxId);
                 if (orderGridBoxId == modifiedGridArray[initialId][1]) {
                     matched[orderGridBoxId] = true;
                 }
                 filled[orderGridBoxId] = true;
-                // console.log(imageArray[shuffledId]);
                 modifiedGridArray[orderGridBoxId] = modifiedGridArray[initialId];
                 modifiedGridArray[initialId] = false;
                 filled[initialId] = false;
-                // console.log(modifiedGridArray);
                 displayGrid(modifiedGridArray);
                 if (checkEndGameconditions()) {
                     endGameSettings();
                 }
+            }
+        } else if (event.dataTransfer.getData('source') == 'ordered-grid') {
+            moves +=1;
+            let initialId =  Number(event.dataTransfer.getData('initialId'));
+            let orderGridBoxId = Number(event.target.dataset.id);
+            if (orderGridBoxId == modifiedGridArray[initialId][1]) {
+                matched[orderGridBoxId] = true;
+            }
+            if (initialId == modifiedGridArray[orderGridBoxId][1]) {
+                matched[initialId] = true;
+            }
+            console.log(matched);
+            let temp = modifiedGridArray[orderGridBoxId]; 
+            modifiedGridArray[orderGridBoxId] = modifiedGridArray[initialId];
+            modifiedGridArray[initialId] = temp;
+            displayGrid(modifiedGridArray);
+            if (checkEndGameconditions()) {
+                endGameSettings();
             }
         }
         return false;
