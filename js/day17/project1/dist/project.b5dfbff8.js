@@ -141,7 +141,7 @@ var Trello = function Trello(appName) {
   _classCallCheck(this, Trello);
 
   this.appName = appName;
-  this.UniqueBoardList = [];
+  this.UniqueBoards = [];
   this.boards = [];
 };
 
@@ -164,11 +164,11 @@ var Task = function Task(taskName) {
   _classCallCheck(this, Task);
 
   this.taskName = taskName;
-}; // create board object and render board;
+};
 
+var newApp = null; // create board object and render board;
 
-var sampleBoard = new Board('SampleBoard');
-renderBoardLists();
+var sampleBoard = new Board('SampleBoard'); // renderBoardLists();
 
 function listInputSectionGenerator() {
   var newInputListDiv = document.createElement('div');
@@ -197,13 +197,14 @@ function taskInputGenerator(listId) {
 
 function tasksListGenerator(listId) {
   // render all tasks
+  var boardIndex = document.getElementById('board-selector').value;
   listIndex = listId.split('-')[listId.split('-').length - 1];
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
 
   try {
-    for (var _iterator = sampleBoard.lists[listIndex].tasks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    for (var _iterator = newApp.boards[boardIndex].lists[listIndex].tasks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var task = _step.value;
       var newTaskLi = document.createElement('li');
       newTaskLi.textContent = task.taskName;
@@ -228,55 +229,111 @@ function tasksListGenerator(listId) {
   taskInputGenerator(listId);
 }
 
-function listSectionGenerator() {
-  for (var _list_index in sampleBoard.lists) {
+function listSectionGenerator(boardIndex) {
+  for (var _list_index in newApp.boards[boardIndex].lists) {
     var newListDiv = document.createElement('div');
-    newListDiv.id = "".concat(sampleBoard.boardName, "-").concat(_list_index);
+    newListDiv.id = "".concat(newApp.boards[boardIndex].boardName, "-").concat(_list_index);
     newListDiv.classList.add('list-section');
-    newListDiv.textContent = sampleBoard.lists[_list_index].listName;
+    newListDiv.textContent = newApp.boards[boardIndex].lists[_list_index].listName;
     document.getElementById('task-board').appendChild(newListDiv);
     var newUl = document.createElement('ul');
-    newUl.id = "".concat(sampleBoard.boardName, "-ul-").concat(_list_index);
-    document.getElementById("".concat(sampleBoard.boardName, "-").concat(_list_index)).appendChild(newUl);
-    tasksListGenerator("".concat(sampleBoard.boardName, "-ul-").concat(_list_index));
+    newUl.id = "".concat(newApp.boards[boardIndex].boardName, "-ul-").concat(_list_index);
+    document.getElementById("".concat(newApp.boards[boardIndex].boardName, "-").concat(_list_index)).appendChild(newUl);
+    tasksListGenerator("".concat(newApp.boards[boardIndex].boardName, "-ul-").concat(_list_index));
   }
 
   listInputSectionGenerator();
 }
 
-function renderBoardLists() {
+function renderBoardLists(boardIndex) {
   // iterate through the list array of boards and tasks array of lists.
   document.getElementById('task-board').innerHTML = '';
-  listSectionGenerator();
+
+  if (boardIndex) {
+    listSectionGenerator(boardIndex);
+  }
+}
+
+function renderBoardsInSelect() {
+  // iterate through the boards name and display in the select option.
+  document.getElementById('board-selector').innerHTML = '';
+  var parentSelect = document.getElementById('board-selector');
+  var newOption = document.createElement('option');
+  newOption.value = 99;
+  newOption.textContent = 'Select a board';
+  newOption.selected = 'yes';
+  parentSelect.appendChild(newOption);
+
+  for (var boardIndex in newApp.boards) {
+    newOption = document.createElement('option');
+    newOption.value = boardIndex;
+    newOption.textContent = newApp.boards[boardIndex].boardName;
+    parentSelect.appendChild(newOption);
+  }
 }
 
 document.getElementById('task-board').addEventListener('keyup', function (event) {
   if (event.keyCode == 13) {
+    var boardIndex = document.getElementById('board-selector').value;
     console.log(event.target.id);
 
     if (event.target.id == 'input-list') {
       var listName = document.getElementById('input-list').value.trim();
 
       if (!/^ *$/.test(listName)) {
-        if (!sampleBoard.UniqueLists.includes(listName)) {
+        if (!newApp.boards[boardIndex].UniqueLists.includes(listName.toLowerCase())) {
           var newList = new List(listName);
-          sampleBoard.lists.push(newList);
-          sampleBoard.UniqueLists.push(listName.toLowerCase());
+          newApp.boards[boardIndex].lists.push(newList);
+          newApp.boards[boardIndex].UniqueLists.push(listName.toLowerCase());
         } else {
           alert('This board contains a list with the same name already.');
         }
 
-        renderBoardLists();
+        renderBoardLists(boardIndex);
       }
     } else {
       var taskName = document.getElementById(event.target.id).value.trim();
       list_index = event.target.id.split('-')[event.target.id.split('-').length - 1];
       var newTask = new Task(taskName);
-      sampleBoard.lists[list_index].tasks.push(newTask);
-      renderBoardLists();
+      newApp.boards[boardIndex].lists[list_index].tasks.push(newTask);
+      console.log();
+      renderBoardLists(boardIndex);
     }
   }
 });
+document.getElementById('input-board').addEventListener('keyup', function () {
+  if (event.keyCode == 13) {
+    var boardName = document.getElementById('input-board').value.trim();
+    document.getElementById('input-board').value = '';
+
+    if (!/^ *$/.test(boardName)) {
+      if (!newApp.UniqueBoards.includes(boardName.toLowerCase())) {
+        var newBoard = new Board(boardName);
+        newApp.boards.push(newBoard);
+        newApp.UniqueBoards.push(boardName.toLowerCase());
+      } else {
+        alert('A board with the given name already exists.');
+      }
+
+      renderBoardsInSelect(); // renderBoardLists();
+    }
+  }
+});
+document.getElementById('board-selector').addEventListener('change', function (event) {
+  if (event.target.value != 99) {
+    var boardIndex = event.target.value;
+    console.log(boardIndex);
+    renderBoardLists(boardIndex);
+  } else {
+    renderBoardLists();
+  }
+});
+
+function init() {
+  newApp = new Trello('AltCampus');
+}
+
+init();
 },{}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -304,7 +361,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35741" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46341" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

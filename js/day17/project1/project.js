@@ -33,7 +33,7 @@
 class Trello {
     constructor(appName) {
         this.appName = appName;
-        this.UniqueBoardList = [];
+        this.UniqueBoards = [];
         this.boards = [];
     }
 }
@@ -60,10 +60,11 @@ class Task {
     }
 }
 
+let newApp = null;
+
 // create board object and render board;
 let sampleBoard = new Board('SampleBoard');
-renderBoardLists();
-
+// renderBoardLists();
 
 function listInputSectionGenerator() {
     let newInputListDiv = document.createElement('div');
@@ -92,8 +93,9 @@ function taskInputGenerator(listId) {
 
 function tasksListGenerator(listId) {
     // render all tasks
+    let boardIndex = document.getElementById('board-selector').value;
     listIndex = listId.split('-')[listId.split('-').length-1];
-    for (let task of sampleBoard.lists[listIndex].tasks) {
+    for (let task of newApp.boards[boardIndex].lists[listIndex].tasks) {
         let newTaskLi = document.createElement('li');
         newTaskLi.textContent = task.taskName;
         newTaskLi.classList.add('task-li');
@@ -102,50 +104,103 @@ function tasksListGenerator(listId) {
     taskInputGenerator(listId);
 }
 
-function listSectionGenerator() {
-    for(let list_index in sampleBoard.lists) {
+function listSectionGenerator(boardIndex) {
+    for(let list_index in newApp.boards[boardIndex].lists) {
         let newListDiv = document.createElement('div');
-        newListDiv.id = `${sampleBoard.boardName}-${list_index}`;
+        newListDiv.id = `${newApp.boards[boardIndex].boardName}-${list_index}`;
         newListDiv.classList.add('list-section');
-        newListDiv.textContent = sampleBoard.lists[list_index].listName;
+        newListDiv.textContent = newApp.boards[boardIndex].lists[list_index].listName;
         document.getElementById('task-board').appendChild(newListDiv);
         let newUl = document.createElement('ul');
-        newUl.id = `${sampleBoard.boardName}-ul-${list_index}`;
-        document.getElementById(`${sampleBoard.boardName}-${list_index}`).appendChild(newUl);
-        tasksListGenerator(`${sampleBoard.boardName}-ul-${list_index}`);
+        newUl.id = `${newApp.boards[boardIndex].boardName}-ul-${list_index}`;
+        document.getElementById(`${newApp.boards[boardIndex].boardName}-${list_index}`).appendChild(newUl);
+        tasksListGenerator(`${newApp.boards[boardIndex].boardName}-ul-${list_index}`);
     }
     listInputSectionGenerator();
 }
 
-function renderBoardLists() {
+function renderBoardLists(boardIndex) {
     // iterate through the list array of boards and tasks array of lists.
     document.getElementById('task-board').innerHTML = '';
-    listSectionGenerator();
+    if (boardIndex) {
+        listSectionGenerator(boardIndex);
+    }
+}
+
+function renderBoardsInSelect() {
+    // iterate through the boards name and display in the select option.
+    document.getElementById('board-selector').innerHTML = '';
+    let parentSelect = document.getElementById('board-selector');
+    let newOption = document.createElement('option');
+    newOption.value = 99;
+    newOption.textContent = 'Select a board';
+    newOption.selected = 'yes';
+    parentSelect.appendChild(newOption);
+    for(let boardIndex in newApp.boards) {
+        newOption = document.createElement('option');
+        newOption.value = boardIndex;
+        newOption.textContent = newApp.boards[boardIndex].boardName;
+        parentSelect.appendChild(newOption);
+    }
 }
 
 document.getElementById('task-board').addEventListener('keyup', (event)=> {
     if (event.keyCode == 13) {
+        let boardIndex = document.getElementById('board-selector').value; 
         console.log(event.target.id);
         if (event.target.id == 'input-list') {
             let listName = document.getElementById('input-list').value.trim();
             if (!(/^ *$/.test(listName))) {
-                if (!sampleBoard.UniqueLists.includes(listName)) {
+                if (!newApp.boards[boardIndex].UniqueLists.includes(listName.toLowerCase())) {
                     let newList = new List(listName);
-                    sampleBoard.lists.push(newList);
-                    sampleBoard.UniqueLists.push(listName.toLowerCase());
+                    newApp.boards[boardIndex].lists.push(newList);
+                    newApp.boards[boardIndex].UniqueLists.push(listName.toLowerCase());
                 } else {
                     alert('This board contains a list with the same name already.');
                 }
-                renderBoardLists();
+                renderBoardLists(boardIndex);
             }
         } else {
             let taskName = document.getElementById(event.target.id).value.trim();
             list_index = event.target.id.split('-')[event.target.id.split('-').length-1];
             let newTask = new Task(taskName);
-            sampleBoard.lists[list_index].tasks.push(newTask);
-            renderBoardLists();
+            newApp.boards[boardIndex].lists[list_index].tasks.push(newTask);
+            console.log()
+            renderBoardLists(boardIndex);
+        }
+    }  
+})
+
+document.getElementById('input-board').addEventListener('keyup', () => {
+    if (event.keyCode == 13) {
+        let boardName = document.getElementById('input-board').value.trim();
+        document.getElementById('input-board').value = '';
+        if (!(/^ *$/.test(boardName))) {
+            if (!newApp.UniqueBoards.includes(boardName.toLowerCase())) {
+                let newBoard = new Board(boardName);
+                newApp.boards.push(newBoard);
+                newApp.UniqueBoards.push(boardName.toLowerCase());
+            } else {
+                alert('A board with the given name already exists.');
+            }
+            renderBoardsInSelect();
+            // renderBoardLists();
         }
     }
+});
 
-    
-})
+document.getElementById('board-selector').addEventListener('change', (event)=> {
+    if (event.target.value != 99) {
+        let boardIndex = event.target.value;
+        console.log(boardIndex);
+        renderBoardLists(boardIndex);
+    } else{
+        renderBoardLists();
+    }
+});
+
+function init() {
+    newApp = new Trello('AltCampus');
+}
+
+init()
