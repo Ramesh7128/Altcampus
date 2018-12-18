@@ -1,7 +1,7 @@
 "use strict"
 let jigSawPuzzle = (function(){
-    let widthpieces = 3;
-    let heightpieces = 3;
+    let widthpieces = 5;
+    let heightpieces = 5;
     let imageArray = [];
     let uploadedUrl = '';
     let matched = new Array(widthpieces*heightpieces).fill(false);
