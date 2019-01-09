@@ -104,210 +104,226 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"project.js":[function(require,module,exports) {
+})({"js/board.js":[function(require,module,exports) {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Trello = function Trello(appName) {
-  _classCallCheck(this, Trello);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.appName = appName;
-  this.UniqueBoards = [];
-  this.boards = [];
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Board = function Board(boardName) {
-  _classCallCheck(this, Board);
+var Trello =
+/*#__PURE__*/
+function () {
+  function Trello(appName) {
+    var _this = this;
 
-  this.boardName = boardName;
-  this.UniqueLists = [];
-  this.lists = [];
-};
+    _classCallCheck(this, Trello);
 
-var List = function List(listName) {
-  _classCallCheck(this, List);
+    this.appName = appName;
+    this.UniqueBoards = [];
+    this.boards = [];
+    this.node = document.createElement('div');
+    this.node.classList.add('container');
+    this.titleNode = document.createElement('h1');
+    this.selectNode = document.createElement('select');
+    this.inputNode = document.createElement('input');
+    this.inputNode.id = 'input-boards';
+    this.boardNode = document.createElement('div');
+    this.boardNode.classList.add('board-container');
+    this.inputNode.addEventListener('keyup', function (event) {
+      if (event.keyCode == 13) {
+        var boardInput = document.getElementById('input-boards');
+        var boardInputValue = boardInput.value;
 
-  this.listName = listName;
-  this.tasks = [];
-};
+        if (!/^ *$/.test(boardInputValue)) {
+          if (!_this.UniqueBoards.includes(boardInputValue.toLowerCase())) {
+            // create a new board object with appname and board name.
+            // add the board object to boards list and unique board list.
+            var newBoard = new Board(_this.appName, boardInputValue);
 
-var Task = function Task(taskName) {
+            _this.boards.push(newBoard);
+
+            _this.UniqueBoards.push(boardInputValue.toLowerCase());
+
+            _this.renderApp();
+          } else {
+            alert('A board with the given name already exists.');
+          }
+        }
+      }
+    });
+    this.selectNode.addEventListener('change', function (event) {
+      var boardIndex = event.target.value;
+      var board = _this.boards[boardIndex];
+      _this.boardNode.innerHTML = '';
+      board.renderBoard();
+
+      _this.boardNode.appendChild(board.node);
+    });
+  }
+
+  _createClass(Trello, [{
+    key: "renderApp",
+    value: function renderApp() {
+      var _this2 = this;
+
+      this.node.innerHTML = ''; // add the app tile and append it to board node.
+
+      this.titleNode.textContent = this.appName;
+      this.node.appendChild(this.titleNode); //push all the boards to the select option after constructing the drop down options.
+
+      this.selectNode.innerHTML = '';
+      this.boards.forEach(function (board, index) {
+        board.optionNode.value = index;
+
+        _this2.selectNode.appendChild(board.optionNode);
+      });
+      this.node.appendChild(this.selectNode); // clear the input node.
+
+      this.inputNode.value = '';
+      this.node.appendChild(this.inputNode);
+      this.node.appendChild(this.boardNode);
+    }
+  }]);
+
+  return Trello;
+}();
+
+var Board =
+/*#__PURE__*/
+function () {
+  function Board(appName, boardName) {
+    var _this3 = this;
+
+    _classCallCheck(this, Board);
+
+    this.appName = appName;
+    this.boardName = boardName;
+    this.UniqueLists = [];
+    this.lists = [];
+    this.optionNode = document.createElement('option');
+    this.optionNode.textContent = this.boardName;
+    this.node = document.createElement('div');
+    this.titleNode = document.createElement('h2');
+    this.titleNode.textContent = this.boardName;
+    this.newInputListDiv = document.createElement('div');
+    this.newInputListDiv.classList.add('div-input');
+    this.newInputListDiv.textContent = 'Add New List';
+    this.newInputListDiv.classList.add('list-section');
+    this.newInputListDiv.classList.add('three');
+    this.newInputListDiv.classList.add('columns');
+    this.newInputElement = document.createElement('input');
+    this.newInputElement.addEventListener('keyup', function (event) {
+      if (event.keyCode == 13) {
+        var listInputValue = event.target.value;
+
+        if (!/^ *$/.test(listInputValue)) {
+          if (!_this3.UniqueLists.includes(listInputValue.toLowerCase())) {
+            var newList = new List(_this3.appName, _this3.boardName, listInputValue);
+
+            _this3.lists.push(newList);
+
+            _this3.UniqueLists.push(listInputValue.toLowerCase());
+
+            _this3.renderBoard();
+          } else {
+            alert('A List with the given name already exists in this board.');
+          }
+        }
+      }
+    });
+  }
+
+  _createClass(Board, [{
+    key: "renderBoard",
+    value: function renderBoard() {
+      var _this4 = this;
+
+      this.node.innerHTML = '';
+      this.node.appendChild(this.titleNode);
+      this.lists.forEach(function (list, index) {
+        _this4.node.appendChild(list.node);
+      }); // add new lists in boards.
+
+      this.newInputListDiv.appendChild(this.newInputElement);
+      this.node.appendChild(this.newInputListDiv);
+    }
+  }]);
+
+  return Board;
+}();
+
+var List =
+/*#__PURE__*/
+function () {
+  function List(appName, boardName, listName) {
+    var _this5 = this;
+
+    _classCallCheck(this, List);
+
+    this.listName = listName;
+    this.appName = appName;
+    this.boardName = boardName;
+    this.listName = listName;
+    this.tasks = [];
+    this.node = document.createElement('div');
+    this.node.classList.add('div-input');
+    this.titleNode = document.createElement('h3');
+    this.titleNode.textContent = this.listName;
+    this.node.appendChild(this.titleNode);
+    this.node.classList.add('list-section');
+    this.node.classList.add('three');
+    this.node.classList.add('columns');
+    this.taskSectionDiv = document.createElement('div');
+    this.node.appendChild(this.taskSectionDiv);
+    this.newInputTaskDiv = document.createElement('div');
+    this.newInputTaskDiv.classList.add('div-input');
+    this.newInputTaskDiv.textContent = 'Add New Task';
+    this.newInputElement = document.createElement('input');
+    this.newInputTaskDiv.appendChild(this.newInputElement);
+    this.node.appendChild(this.newInputTaskDiv);
+    this.newInputElement.addEventListener('keyup', function (event) {
+      var taskInputValue = event.target.value;
+
+      if (event.keyCode == 13) {
+        if (!/^ *$/.test(taskInputValue)) {
+          var newTask = new Task(_this5.appName, _this5.boardName, _this5.listName, taskInputValue);
+
+          _this5.tasks.push(newTask);
+
+          _this5.renderList();
+        }
+      }
+    });
+  }
+
+  _createClass(List, [{
+    key: "renderList",
+    value: function renderList() {
+      var _this6 = this;
+
+      // display all tasks.
+      this.tasks.forEach(function (task, index) {
+        _this6.taskSectionDiv.appendChild(task.node);
+      });
+    }
+  }]);
+
+  return List;
+}();
+
+var Task = function Task(appName, boardName, listName, taskName) {
   _classCallCheck(this, Task);
 
+  this.appName = appName;
+  this.boardName = boardName;
+  this.listName = listName;
   this.taskName = taskName;
+  this.node = document.createElement('div');
+  this.taskElement = document.createElement('p');
+  this.taskElement.textContent = this.taskName;
+  this.node.appendChild(this.taskElement);
 };
-
-var newApp = null; // create board object and render board;
-
-var sampleBoard = new Board('SampleBoard');
-
-function listInputSectionGenerator() {
-  var newInputListDiv = document.createElement('div');
-  newInputListDiv.id = 'div-input-list';
-  newInputListDiv.classList.add('div-input');
-  newInputListDiv.textContent = 'Add New List';
-  newInputListDiv.classList.add('list-section');
-  newInputListDiv.classList.add('three');
-  newInputListDiv.classList.add('columns');
-  document.getElementById('task-board').appendChild(newInputListDiv);
-  var newInputElement = document.createElement('input');
-  newInputElement.id = 'input-list';
-  document.getElementById('div-input-list').appendChild(newInputElement);
-}
-
-function taskInputGenerator(listId) {
-  var newInputTaskDiv = document.createElement('div');
-  newInputTaskDiv.id = "div-input-task-".concat(listId);
-  newInputTaskDiv.classList.add('div-input');
-  newInputTaskDiv.innerHTML = '<p>Add New Task</p>';
-  document.getElementById(listId).appendChild(newInputTaskDiv);
-  var newInputElement = document.createElement('input');
-  newInputElement.id = "input-task-".concat(listId);
-  newInputElement.classList.add('div-task-input'); // newInputElement.dataset.listId = listId.
-
-  document.getElementById("div-input-task-".concat(listId)).appendChild(newInputElement);
-}
-
-function tasksListGenerator(listId) {
-  // render all tasks
-  var boardIndex = document.getElementById('board-selector').value;
-  listIndex = listId.split('-')[listId.split('-').length - 1];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = newApp.boards[boardIndex].lists[listIndex].tasks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var task = _step.value;
-      var newTaskLi = document.createElement('li');
-      newTaskLi.textContent = task.taskName;
-      newTaskLi.classList.add('task-li');
-      document.getElementById(listId).appendChild(newTaskLi);
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  taskInputGenerator(listId);
-}
-
-function listSectionGenerator(boardIndex) {
-  for (var _list_index in newApp.boards[boardIndex].lists) {
-    var newListDiv = document.createElement('div');
-    newListDiv.id = "".concat(newApp.boards[boardIndex].boardName, "-").concat(_list_index);
-    newListDiv.classList.add('list-section');
-    newListDiv.classList.add('three');
-    newListDiv.classList.add('columns');
-    newListDiv.textContent = newApp.boards[boardIndex].lists[_list_index].listName;
-    document.getElementById('task-board').appendChild(newListDiv);
-    var newUl = document.createElement('ul');
-    newUl.id = "".concat(newApp.boards[boardIndex].boardName, "-ul-").concat(_list_index);
-    document.getElementById("".concat(newApp.boards[boardIndex].boardName, "-").concat(_list_index)).appendChild(newUl);
-    tasksListGenerator("".concat(newApp.boards[boardIndex].boardName, "-ul-").concat(_list_index));
-  }
-
-  listInputSectionGenerator();
-}
-
-function renderBoardLists(boardIndex) {
-  // iterate through the list array of boards and tasks array of lists.
-  document.getElementById('task-board').innerHTML = '';
-
-  if (boardIndex) {
-    listSectionGenerator(boardIndex);
-  }
-}
-
-function renderBoardsInSelect() {
-  // iterate through the boards name and display in the select option.
-  document.getElementById('board-selector').innerHTML = '';
-  var parentSelect = document.getElementById('board-selector');
-  var newOption = document.createElement('option');
-  newOption.value = 99;
-  newOption.textContent = 'Select a board';
-  newOption.selected = 'yes';
-  parentSelect.appendChild(newOption);
-
-  for (var boardIndex in newApp.boards) {
-    newOption = document.createElement('option');
-    newOption.value = boardIndex;
-    newOption.textContent = newApp.boards[boardIndex].boardName;
-    parentSelect.appendChild(newOption);
-  }
-}
-
-document.getElementById('task-board').addEventListener('keyup', function (event) {
-  if (event.keyCode == 13) {
-    var boardIndex = document.getElementById('board-selector').value;
-    console.log(event.target.id);
-
-    if (event.target.id == 'input-list') {
-      var listName = document.getElementById('input-list').value.trim();
-
-      if (!/^ *$/.test(listName)) {
-        if (!newApp.boards[boardIndex].UniqueLists.includes(listName.toLowerCase())) {
-          var newList = new List(listName);
-          newApp.boards[boardIndex].lists.push(newList);
-          newApp.boards[boardIndex].UniqueLists.push(listName.toLowerCase());
-        } else {
-          alert('This board contains a list with the same name already.');
-        }
-
-        renderBoardLists(boardIndex);
-      }
-    } else {
-      var taskName = document.getElementById(event.target.id).value.trim();
-      list_index = event.target.id.split('-')[event.target.id.split('-').length - 1];
-      var newTask = new Task(taskName);
-      newApp.boards[boardIndex].lists[list_index].tasks.push(newTask);
-      console.log();
-      renderBoardLists(boardIndex);
-    }
-  }
-});
-document.getElementById('input-board').addEventListener('keyup', function () {
-  if (event.keyCode == 13) {
-    var boardName = document.getElementById('input-board').value.trim();
-    document.getElementById('input-board').value = '';
-
-    if (!/^ *$/.test(boardName)) {
-      if (!newApp.UniqueBoards.includes(boardName.toLowerCase())) {
-        var newBoard = new Board(boardName);
-        newApp.boards.push(newBoard);
-        newApp.UniqueBoards.push(boardName.toLowerCase());
-      } else {
-        alert('A board with the given name already exists.');
-      }
-
-      renderBoardsInSelect(); // renderBoardLists();
-    }
-  }
-});
-document.getElementById('board-selector').addEventListener('change', function (event) {
-  if (event.target.value != 99) {
-    var boardIndex = event.target.value;
-    console.log(boardIndex);
-    renderBoardLists(boardIndex);
-  } else {
-    renderBoardLists();
-  }
-});
-
-function init() {
-  newApp = new Trello('AltCampus');
-}
-
-init();
 },{}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -335,7 +351,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44387" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38867" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -477,5 +493,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","project.js"], null)
-//# sourceMappingURL=/project.b5dfbff8.map
+},{}]},{},["../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/board.js"], null)
+//# sourceMappingURL=/board.150adbaf.map
