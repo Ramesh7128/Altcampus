@@ -104,13 +104,246 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"js/index.js":[function(require,module,exports) {
+})({"js/board.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Trello = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Trello =
+/*#__PURE__*/
+function () {
+  function Trello(appName) {
+    var _this = this;
+
+    _classCallCheck(this, Trello);
+
+    this.appName = appName;
+    this.UniqueBoards = [];
+    this.boards = [];
+    this.node = document.createElement('div');
+    this.node.classList.add('container');
+    this.titleNode = document.createElement('h1');
+    this.selectNode = document.createElement('select');
+    this.inputNode = document.createElement('input');
+    this.inputNode.id = 'input-boards';
+    this.boardNode = document.createElement('div');
+    this.boardNode.classList.add('board-container');
+    this.inputNode.addEventListener('keyup', function (event) {
+      if (event.keyCode == 13) {
+        var boardInput = document.getElementById('input-boards');
+        var boardInputValue = boardInput.value;
+
+        if (!/^ *$/.test(boardInputValue)) {
+          if (!_this.UniqueBoards.includes(boardInputValue.toLowerCase())) {
+            // create a new board object with appname and board name.
+            // add the board object to boards list and unique board list.
+            var newBoard = new Board(_this.appName, boardInputValue);
+
+            _this.boards.push(newBoard);
+
+            _this.UniqueBoards.push(boardInputValue.toLowerCase());
+
+            _this.renderApp();
+          } else {
+            alert('A board with the given name already exists.');
+          }
+        }
+      }
+    });
+    this.selectNode.addEventListener('change', function (event) {
+      var boardIndex = event.target.value;
+      var board = _this.boards[boardIndex];
+      _this.boardNode.innerHTML = '';
+      board.renderBoard();
+
+      _this.boardNode.appendChild(board.node);
+    });
+  }
+
+  _createClass(Trello, [{
+    key: "renderApp",
+    value: function renderApp() {
+      var _this2 = this;
+
+      this.node.innerHTML = ''; // add the app tile and append it to board node.
+
+      this.titleNode.textContent = this.appName;
+      this.node.appendChild(this.titleNode); //push all the boards to the select option after constructing the drop down options.
+
+      this.selectNode.innerHTML = '';
+      this.boards.forEach(function (board, index) {
+        board.optionNode.value = index;
+
+        _this2.selectNode.appendChild(board.optionNode);
+      });
+      this.node.appendChild(this.selectNode); // clear the input node.
+
+      this.inputNode.value = '';
+      this.node.appendChild(this.inputNode);
+      this.node.appendChild(this.boardNode);
+    }
+  }]);
+
+  return Trello;
+}();
+
+exports.Trello = Trello;
+
+var Board =
+/*#__PURE__*/
+function () {
+  function Board(appName, boardName) {
+    var _this3 = this;
+
+    _classCallCheck(this, Board);
+
+    this.appName = appName;
+    this.boardName = boardName;
+    this.UniqueLists = [];
+    this.lists = [];
+    this.optionNode = document.createElement('option');
+    this.optionNode.textContent = this.boardName;
+    this.node = document.createElement('div');
+    this.titleNode = document.createElement('h2');
+    this.titleNode.textContent = this.boardName;
+    this.newInputListDiv = document.createElement('div');
+    this.newInputListDiv.classList.add('div-input');
+    this.newInputListDiv.textContent = 'Add New List';
+    this.newInputListDiv.classList.add('list-section');
+    this.newInputListDiv.classList.add('three');
+    this.newInputListDiv.classList.add('columns');
+    this.newInputElement = document.createElement('input');
+    this.newInputElement.addEventListener('keyup', function (event) {
+      if (event.keyCode == 13) {
+        var listInputValue = event.target.value;
+
+        if (!/^ *$/.test(listInputValue)) {
+          if (!_this3.UniqueLists.includes(listInputValue.toLowerCase())) {
+            var newList = new List(_this3.appName, _this3.boardName, listInputValue);
+
+            _this3.lists.push(newList);
+
+            _this3.UniqueLists.push(listInputValue.toLowerCase());
+
+            _this3.renderBoard();
+          } else {
+            alert('A List with the given name already exists in this board.');
+          }
+        }
+      }
+    });
+  }
+
+  _createClass(Board, [{
+    key: "renderBoard",
+    value: function renderBoard() {
+      var _this4 = this;
+
+      this.node.innerHTML = '';
+      this.node.appendChild(this.titleNode);
+      this.lists.forEach(function (list, index) {
+        _this4.node.appendChild(list.node);
+      }); // add new lists in boards.
+
+      this.newInputListDiv.appendChild(this.newInputElement);
+      this.node.appendChild(this.newInputListDiv);
+    }
+  }]);
+
+  return Board;
+}();
+
+var List =
+/*#__PURE__*/
+function () {
+  function List(appName, boardName, listName) {
+    var _this5 = this;
+
+    _classCallCheck(this, List);
+
+    this.listName = listName;
+    this.appName = appName;
+    this.boardName = boardName;
+    this.listName = listName;
+    this.tasks = [];
+    this.node = document.createElement('div');
+    this.node.classList.add('div-input');
+    this.titleNode = document.createElement('h3');
+    this.titleNode.textContent = this.listName;
+    this.node.appendChild(this.titleNode);
+    this.node.classList.add('list-section');
+    this.node.classList.add('three');
+    this.node.classList.add('columns');
+    this.taskSectionDiv = document.createElement('div');
+    this.node.appendChild(this.taskSectionDiv);
+    this.newInputTaskDiv = document.createElement('div');
+    this.newInputTaskDiv.classList.add('div-input');
+    this.newInputTaskDiv.textContent = 'Add New Task';
+    this.newInputElement = document.createElement('input');
+    this.newInputTaskDiv.appendChild(this.newInputElement);
+    this.node.appendChild(this.newInputTaskDiv);
+    this.newInputElement.addEventListener('keyup', function (event) {
+      var taskInputValue = event.target.value;
+
+      if (event.keyCode == 13) {
+        if (!/^ *$/.test(taskInputValue)) {
+          var newTask = new Task(_this5.appName, _this5.boardName, _this5.listName, taskInputValue);
+
+          _this5.tasks.push(newTask);
+
+          _this5.renderList();
+        }
+      }
+    });
+  }
+
+  _createClass(List, [{
+    key: "renderList",
+    value: function renderList() {
+      var _this6 = this;
+
+      // display all tasks.
+      this.tasks.forEach(function (task, index) {
+        _this6.taskSectionDiv.appendChild(task.node);
+      });
+    }
+  }]);
+
+  return List;
+}();
+
+var Task = function Task(appName, boardName, listName, taskName) {
+  _classCallCheck(this, Task);
+
+  this.appName = appName;
+  this.boardName = boardName;
+  this.listName = listName;
+  this.taskName = taskName;
+  this.node = document.createElement('div');
+  this.taskElement = document.createElement('p');
+  this.taskElement.textContent = this.taskName;
+  this.node.appendChild(this.taskElement);
+};
+},{}],"js/index.js":[function(require,module,exports) {
+"use strict";
+
+var _board = require("./board");
+
 document.body.onload = function () {
-  var newApp = new Trello('AltCampus');
+  var newApp = new _board.Trello('AltCampus');
   newApp.renderApp();
   document.getElementById('root').appendChild(newApp.node);
 };
-},{}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./board":"js/board.js"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -137,7 +370,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38867" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32799" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

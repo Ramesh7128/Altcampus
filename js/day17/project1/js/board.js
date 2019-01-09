@@ -1,4 +1,4 @@
-class Trello {
+export class Trello {
     constructor(appName) {
         this.appName = appName;
         this.UniqueBoards = [];
