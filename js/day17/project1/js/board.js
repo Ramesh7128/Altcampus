@@ -6,17 +6,28 @@ export class Trello {
 
         this.node = document.createElement('div');
         this.node.classList.add('container');
+
         this.titleNode = document.createElement('h1');
+        this.titleNode.textContent = this.appName;
+        this.node.appendChild(this.titleNode);
+
         this.selectNode = document.createElement('select');
+        this.node.appendChild(this.selectNode);
+
         this.inputNode = document.createElement('input');
         this.inputNode.id = 'input-boards';
         this.boardNode = document.createElement('div');
         this.boardNode.classList.add('board-container');
+
+        this.node.appendChild(this.inputNode);
+        this.node.appendChild(this.boardNode);
+
         this.inputNode.addEventListener('keyup', (event) => {
             if (event.keyCode == 13) {
                 let boardInput = document.getElementById('input-boards');
                 let boardInputValue = boardInput.value;
                 if (!(/^ *$/.test(boardInputValue))) {
+                    this.inputNode.value = '';
                     if (!this.UniqueBoards.includes(boardInputValue.toLowerCase())) {
                         // create a new board object with appname and board name.
                         // add the board object to boards list and unique board list.
@@ -40,22 +51,10 @@ export class Trello {
         });
     }
     renderApp() {
-        this.node.innerHTML = '';
-        // add the app tile and append it to board node.
-        this.titleNode.textContent = this.appName;
-        this.node.appendChild(this.titleNode);
-
-        //push all the boards to the select option after constructing the drop down options.
-        this.selectNode.innerHTML = '';
         this.boards.forEach((board, index) => {
             board.optionNode.value = index;
             this.selectNode.appendChild(board.optionNode);
         });
-        this.node.appendChild(this.selectNode);
-        // clear the input node.
-        this.inputNode.value = '';
-        this.node.appendChild(this.inputNode);
-        this.node.appendChild(this.boardNode);
     }
 }
 
@@ -71,6 +70,11 @@ class Board {
         this.node = document.createElement('div');
         this.titleNode = document.createElement('h2');
         this.titleNode.textContent = this.boardName;
+        this.node.appendChild(this.titleNode);
+
+        // section for rendering all list for a board.
+        this.listsSectionNode = document.createElement('div');
+        this.node.appendChild(this.listsSectionNode);
         
         this.newInputListDiv = document.createElement('div');
         this.newInputListDiv.classList.add('div-input');
@@ -78,12 +82,16 @@ class Board {
         this.newInputListDiv.classList.add('list-section');
         this.newInputListDiv.classList.add('three');
         this.newInputListDiv.classList.add('columns');
-        this.newInputElement = document.createElement('input'); 
+        this.newInputElement = document.createElement('input');
+        
+        this.newInputListDiv.appendChild(this.newInputElement);
+        this.node.appendChild(this.newInputListDiv);
         
         this.newInputElement.addEventListener('keyup', (event)=> {
             if(event.keyCode == 13) {
                 let listInputValue = event.target.value;
                 if (!(/^ *$/.test(listInputValue))) {
+                    this.newInputElement.value = '';
                     if (!this.UniqueLists.includes(listInputValue.toLowerCase())) {
                         let newList = new List(this.appName, this.boardName, listInputValue);
                         this.lists.push(newList);
@@ -97,14 +105,9 @@ class Board {
         });
     }
     renderBoard() {
-        this.node.innerHTML = '';
-        this.node.appendChild(this.titleNode);
         this.lists.forEach((list, index) => {
-            this.node.appendChild(list.node);
+            this.listsSectionNode.appendChild(list.node);
         });
-        // add new lists in boards.
-        this.newInputListDiv.appendChild(this.newInputElement);
-        this.node.appendChild(this.newInputListDiv);
     }
 
 }
@@ -143,6 +146,7 @@ class List {
             let taskInputValue = event.target.value;
             if (event.keyCode == 13) {
                 if(!(/^ *$/.test(taskInputValue))) {
+                    this.newInputElement.value = "";
                     let newTask = new Task(this.appName, this.boardName, this.listName, taskInputValue);
                     this.tasks.push(newTask);
                     this.renderList();
@@ -152,7 +156,6 @@ class List {
 
     }
     renderList() {
-        // display all tasks.
         this.tasks.forEach((task, index) => {
             this.taskSectionDiv.appendChild(task.node);
         });

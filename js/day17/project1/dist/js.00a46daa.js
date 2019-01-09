@@ -132,17 +132,24 @@ function () {
     this.node = document.createElement('div');
     this.node.classList.add('container');
     this.titleNode = document.createElement('h1');
+    this.titleNode.textContent = this.appName;
+    this.node.appendChild(this.titleNode);
     this.selectNode = document.createElement('select');
+    this.node.appendChild(this.selectNode);
     this.inputNode = document.createElement('input');
     this.inputNode.id = 'input-boards';
     this.boardNode = document.createElement('div');
     this.boardNode.classList.add('board-container');
+    this.node.appendChild(this.inputNode);
+    this.node.appendChild(this.boardNode);
     this.inputNode.addEventListener('keyup', function (event) {
       if (event.keyCode == 13) {
         var boardInput = document.getElementById('input-boards');
         var boardInputValue = boardInput.value;
 
         if (!/^ *$/.test(boardInputValue)) {
+          _this.inputNode.value = '';
+
           if (!_this.UniqueBoards.includes(boardInputValue.toLowerCase())) {
             // create a new board object with appname and board name.
             // add the board object to boards list and unique board list.
@@ -174,22 +181,11 @@ function () {
     value: function renderApp() {
       var _this2 = this;
 
-      this.node.innerHTML = ''; // add the app tile and append it to board node.
-
-      this.titleNode.textContent = this.appName;
-      this.node.appendChild(this.titleNode); //push all the boards to the select option after constructing the drop down options.
-
-      this.selectNode.innerHTML = '';
       this.boards.forEach(function (board, index) {
         board.optionNode.value = index;
 
         _this2.selectNode.appendChild(board.optionNode);
       });
-      this.node.appendChild(this.selectNode); // clear the input node.
-
-      this.inputNode.value = '';
-      this.node.appendChild(this.inputNode);
-      this.node.appendChild(this.boardNode);
     }
   }]);
 
@@ -215,6 +211,10 @@ function () {
     this.node = document.createElement('div');
     this.titleNode = document.createElement('h2');
     this.titleNode.textContent = this.boardName;
+    this.node.appendChild(this.titleNode); // section for rendering all list for a board.
+
+    this.listsSectionNode = document.createElement('div');
+    this.node.appendChild(this.listsSectionNode);
     this.newInputListDiv = document.createElement('div');
     this.newInputListDiv.classList.add('div-input');
     this.newInputListDiv.textContent = 'Add New List';
@@ -222,11 +222,15 @@ function () {
     this.newInputListDiv.classList.add('three');
     this.newInputListDiv.classList.add('columns');
     this.newInputElement = document.createElement('input');
+    this.newInputListDiv.appendChild(this.newInputElement);
+    this.node.appendChild(this.newInputListDiv);
     this.newInputElement.addEventListener('keyup', function (event) {
       if (event.keyCode == 13) {
         var listInputValue = event.target.value;
 
         if (!/^ *$/.test(listInputValue)) {
+          _this3.newInputElement.value = '';
+
           if (!_this3.UniqueLists.includes(listInputValue.toLowerCase())) {
             var newList = new List(_this3.appName, _this3.boardName, listInputValue);
 
@@ -248,14 +252,9 @@ function () {
     value: function renderBoard() {
       var _this4 = this;
 
-      this.node.innerHTML = '';
-      this.node.appendChild(this.titleNode);
       this.lists.forEach(function (list, index) {
-        _this4.node.appendChild(list.node);
-      }); // add new lists in boards.
-
-      this.newInputListDiv.appendChild(this.newInputElement);
-      this.node.appendChild(this.newInputListDiv);
+        _this4.listsSectionNode.appendChild(list.node);
+      });
     }
   }]);
 
@@ -296,6 +295,7 @@ function () {
 
       if (event.keyCode == 13) {
         if (!/^ *$/.test(taskInputValue)) {
+          _this5.newInputElement.value = "";
           var newTask = new Task(_this5.appName, _this5.boardName, _this5.listName, taskInputValue);
 
           _this5.tasks.push(newTask);
@@ -311,7 +311,6 @@ function () {
     value: function renderList() {
       var _this6 = this;
 
-      // display all tasks.
       this.tasks.forEach(function (task, index) {
         _this6.taskSectionDiv.appendChild(task.node);
       });
